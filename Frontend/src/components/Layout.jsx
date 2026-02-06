@@ -5,7 +5,6 @@ import Footer from './Footer';
 const Layout = ({ children }) => {
     return (
         <div className="relative min-h-screen font-sans text-text-primary overflow-x-hidden">
-            {/* Mesh Background */}
             <div className="mesh-background">
                 <div className="mesh-blob blob-mint"></div>
                 <div className="mesh-blob blob-coral"></div>

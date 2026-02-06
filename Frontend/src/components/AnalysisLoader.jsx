@@ -20,26 +20,22 @@ const AnalysisLoader = () => {
 
     return (
         <div className="flex flex-col items-center justify-center space-y-8 min-h-[400px]">
-            {/* Alchemical Orbs Animation */}
             <div className="relative w-32 h-32">
                 <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                     className="absolute inset-0"
                 >
-                    {/* UPDATED: Used strong standard colors, removed blend mode, full opacity */}
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-16 bg-emerald-500 rounded-full blur-xl animate-pulse" />
                     <div className="absolute bottom-0 right-0 w-16 h-16 bg-rose-500 rounded-full blur-xl animate-pulse delay-150" />
                     <div className="absolute bottom-0 left-0 w-16 h-16 bg-violet-600 rounded-full blur-xl animate-pulse delay-300" />
                 </motion.div>
 
-                {/* Core */}
                 <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-6 h-6 bg-white rounded-full shadow-lg z-10" />
                 </div>
             </div>
 
-            {/* Text */}
             <div className="text-center space-y-2">
                 <motion.h3
                     key={stepIndex}

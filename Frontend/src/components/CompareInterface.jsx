@@ -3,20 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, X, ArrowRightLeft } from 'lucide-react';
 import { cn } from '../lib/utils';
 import AnalysisLoader from './AnalysisLoader';
-// IMPORT THE NEW COMPONENT
 import ComparisonResultsView from './ComparisonResultsView';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const CompareInterface = () => {
-    // State
-    const [mode, setMode] = useState('input'); // input | loading | results
+    const [mode, setMode] = useState('input');
     const [userGoals, setUserGoals] = useState('');
     const [images, setImages] = useState({ A: null, B: null });
     const [previews, setPreviews] = useState({ A: null, B: null });
     const [comparisonResult, setComparisonResult] = useState(null);
     const [error, setError] = useState(null);
 
-    // Refs
     const inputRefA = useRef(null);
     const inputRefB = useRef(null);
 
@@ -54,10 +51,6 @@ const CompareInterface = () => {
             if (!response.ok) throw new Error("Comparison failed");
 
             const data = await response.json();
-
-            // Note: Ensure your backend returns the data inside 'comparison' key 
-            // OR adjust this line if it returns the object directly.
-            // Based on previous prompt, it was data.comparison
             setComparisonResult(data.comparison || data);
 
             setMode('results');
@@ -83,7 +76,6 @@ const CompareInterface = () => {
             <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-teal-50/50 rounded-full blur-3xl -z-10" />
             <AnimatePresence mode="wait">
 
-                {/* --- INPUT MODE --- */}
                 {mode === 'input' && (
                     <motion.div
                         key="input"
@@ -108,7 +100,6 @@ const CompareInterface = () => {
                         )}
 
                         <div className="glass p-6 md:p-8 rounded-3xl shadow-glass space-y-8 relative">
-                            {/* Goals Input */}
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-text-muted uppercase tracking-wider ml-1">
                                     Your Goals
@@ -121,7 +112,6 @@ const CompareInterface = () => {
                                 />
                             </div>
 
-                            {/* Dual Upload Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
                                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden md:flex items-center justify-center w-10 h-10 bg-white rounded-full shadow-lg border border-gray-200">
                                     <span className="font-black text-slate-400 text-xs">VS</span>
@@ -143,7 +133,6 @@ const CompareInterface = () => {
                                 />
                             </div>
 
-                            {/* Action Button */}
                             <div className="flex justify-center pt-4">
                                 <button
                                     onClick={handleCompare}
@@ -163,7 +152,6 @@ const CompareInterface = () => {
                     </motion.div>
                 )}
 
-                {/* --- LOADING MODE --- */}
                 {mode === 'loading' && (
                     <motion.div
                         key="loading"
@@ -175,7 +163,6 @@ const CompareInterface = () => {
                     </motion.div>
                 )}
 
-                {/* --- RESULTS MODE (NEW COMPONENT) --- */}
                 {mode === 'results' && comparisonResult && (
                     <ComparisonResultsView result={comparisonResult} onReset={handleReset} />
                 )}
@@ -185,7 +172,6 @@ const CompareInterface = () => {
     );
 };
 
-// --- Reusable Upload Box (Kept local for simplicity) ---
 const UploadBox = ({ side, preview, inputRef, onSelect, onClear }) => (
     <div className="relative group">
         <input

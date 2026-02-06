@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import confetti from 'canvas-confetti'; // Import the library
+import confetti from 'canvas-confetti';
 import {
     Trophy,
     AlertOctagon,
@@ -14,7 +14,6 @@ import {
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-// Reusable Score Meter
 const HealthScoreMeter = ({ score, colorClass }) => {
     const radius = 36;
     const stroke = 6;
@@ -59,38 +58,32 @@ const HealthScoreMeter = ({ score, colorClass }) => {
 };
 
 const ComparisonResultsView = ({ result, onReset }) => {
-    // 1. Parse Winner Data
     const winnerObj = result?.final_recommendation?.[0] || {};
     const winnerName = winnerObj?.winner || "Unknown";
     const winnerReason = result?.final_recommendation?.[1] || "Analysis complete.";
 
-    // 2. Confetti Effect Hook
     useEffect(() => {
-        // Only trigger if there is a clear winner (A or B)
         if (winnerName === "Product A" || winnerName === "Product B") {
-            const duration = 1500; // Animation lasts 3 seconds
+            const duration = 1500;
             const end = Date.now() + duration;
 
-            // Brand colors: Emerald, Blue, and a touch of Gold
             const colors = ['#10b981', '#3b82f6', '#fbbf24', '#34d399', '#f5590b'];
 
             (function frame() {
-                // Launch particles from the top left
                 confetti({
                     particleCount: 3,
                     angle: 60,
                     spread: 70,
-                    origin: { x: 0, y: 0 }, // Top Left corner
+                    origin: { x: 0, y: 0 },
                     colors: colors,
-                    zIndex: 100 // Ensure it sits on top of UI
+                    zIndex: 100
                 });
 
-                // Launch particles from the top right
                 confetti({
                     particleCount: 3,
                     angle: 120,
                     spread: 70,
-                    origin: { x: 1, y: 0 }, // Top Right corner
+                    origin: { x: 1, y: 0 },
                     colors: colors,
                     zIndex: 100
                 });
@@ -100,9 +93,8 @@ const ComparisonResultsView = ({ result, onReset }) => {
                 }
             }());
         }
-    }, [winnerName]); // Re-run if the winner changes
+    }, [winnerName]);
 
-    // 3. Determine Theme based on Winner
     let theme = {
         bg: "bg-slate-50",
         border: "border-slate-200",
@@ -135,7 +127,6 @@ const ComparisonResultsView = ({ result, onReset }) => {
             animate="show"
             className="w-full max-w-6xl mx-auto space-y-8 pb-20"
         >
-            {/* --- HEADER: BATTLE SUMMARY --- */}
             <motion.div variants={itemVars} className={cn("rounded-3xl p-8 border text-center relative overflow-hidden", theme.bg, theme.border)}>
                 <div className="relative z-10 max-w-3xl mx-auto space-y-4">
                     <div className={cn("inline-flex items-center shadow-lg shadow-emerald-400/70 gap-2 px-10 py-2.5 rounded-full bg-emerald-400/100 backdrop-blur-sm border border-black/5 text-lg font-bold uppercase tracking-wide", theme.text)}>
@@ -151,12 +142,10 @@ const ComparisonResultsView = ({ result, onReset }) => {
                         {safeText(result?.battle_intro)}
                     </p>
                 </div>
-                {/* Background Decor */}
                 <div className={cn("absolute top-0 right-0 w-64 h-64 rounded-full opacity-10 blur-3xl -mr-20 -mt-20 pointer-events-none bg-current", theme.text)} />
                 <div className={cn("absolute bottom-0 left-0 w-64 h-64 rounded-full opacity-10 blur-3xl -ml-20 -mb-20 pointer-events-none bg-current", theme.text)} />
             </motion.div>
 
-            {/* --- MAIN GRID: HEAD TO HEAD --- */}
             <div className="grid md:grid-cols-2 gap-6">
                 <ProductCard
                     data={result?.product_a}
@@ -172,7 +161,6 @@ const ComparisonResultsView = ({ result, onReset }) => {
                 />
             </div>
 
-            {/* --- THE TRADE OFF --- */}
             <motion.div variants={itemVars} className="glass p-8 rounded-3xl border border-indigo-100 bg-indigo-50/30">
                 <div className="flex flex-col md:flex-row gap-6 items-start">
                     <div className="p-4 bg-indigo-100 text-indigo-600 rounded-2xl shrink-0">
@@ -195,7 +183,6 @@ const ComparisonResultsView = ({ result, onReset }) => {
                 </div>
             </motion.div>
 
-            {/* --- PRO TIP --- */}
             <motion.div variants={itemVars} className="glass p-6 rounded-2xl border border-amber-100 bg-amber-50/40 flex gap-4 items-start">
                 <div className="p-2 bg-amber-100 text-amber-600 rounded-lg shrink-0 mt-1">
                     <Lightbulb className="w-5 h-5" />
@@ -210,7 +197,6 @@ const ComparisonResultsView = ({ result, onReset }) => {
                 </div>
             </motion.div>
 
-            {/* --- RESET BUTTON --- */}
             <motion.div variants={itemVars} className="flex justify-center pt-8">
                 <button
                     onClick={onReset}
@@ -224,7 +210,6 @@ const ComparisonResultsView = ({ result, onReset }) => {
     );
 };
 
-// --- SUB-COMPONENT: PRODUCT CARD ---
 const ProductCard = ({ data, label, isWinner, color }) => {
     if (!data) return null;
 
@@ -266,7 +251,6 @@ const ProductCard = ({ data, label, isWinner, color }) => {
             </div>
 
             <div className="space-y-6">
-                {/* PROS */}
                 <div>
                     <h4 className={cn("text-xs font-bold uppercase tracking-wide mb-3 flex items-center gap-2", checkIconColor)}>
                         <Check className="w-4 h-4" /> The Good
@@ -280,7 +264,6 @@ const ProductCard = ({ data, label, isWinner, color }) => {
                     </ul>
                 </div>
 
-                {/* CONS */}
                 <div>
                     <h4 className="text-xs font-bold text-rose-600 uppercase tracking-wide mb-3 flex items-center gap-2">
                         <X className="w-4 h-4" /> The Bad

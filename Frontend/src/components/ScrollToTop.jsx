@@ -5,7 +5,6 @@ const ScrollToTop = () => {
     const { pathname } = useLocation();
 
     useEffect(() => {
-        // Instant scroll to top whenever the route path changes
         window.scrollTo(0, 0);
     }, [pathname]);
 

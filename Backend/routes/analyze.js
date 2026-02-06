@@ -22,7 +22,7 @@ router.post('/api/analyze', upload.single('image'), async (req, res) => {
         const filePath = req.file.path;
 
         const model = genAI.getGenerativeModel({
-            model: "gemini-2.5-flash", // Updated to latest stable flash model
+            model: "gemini-2.5-flash",
             generationConfig: { responseMimeType: "application/json" }
         });
 
@@ -83,7 +83,6 @@ router.post('/api/analyze', upload.single('image'), async (req, res) => {
         const verdictResponse = await verdictResult.response;
         const jsonText = verdictResponse.text();
 
-        // Cleanup file
         fs.unlinkSync(filePath);
         console.log(jsonText);
 
@@ -101,7 +100,6 @@ router.post('/api/analyze', upload.single('image'), async (req, res) => {
     }
 });
 
-// --- ROUTE 2: Barcode Analysis (Text/JSON Payload) ---
 router.post('/api/barcode', async (req, res) => {
     try {
         const { product_name, ingredients_text, nutriments, image_url, userGoals } = req.body;
@@ -191,21 +189,17 @@ router.post('/api/barcode', async (req, res) => {
     }
 });
 
-// --- ROUTE 3: Comparison Mode (1v1 Battle) ---
 router.post('/api/compare', upload.array('image', 2), async (req, res) => {
     const files = req.files;
 
     try {
         const { userGoals } = req.body;
 
-        // 1. Validation
         if (!files || files.length < 2) {
-            // Cleanup any single file that might have uploaded
             if (files) files.forEach(f => fs.unlinkSync(f.path));
             return res.status(400).json({ success: false, message: "Please upload 2 images to compare." });
         }
 
-        // 2. Prepare Images for Gemini
         const imageParts = files.map(file => ({
             inlineData: {
                 data: fs.readFileSync(file.path).toString("base64"),
@@ -213,13 +207,11 @@ router.post('/api/compare', upload.array('image', 2), async (req, res) => {
             },
         }));
 
-        // 3. Model Setup
         const model = genAI.getGenerativeModel({
             model: "gemini-2.5-flash",
             generationConfig: { responseMimeType: "application/json" }
         });
 
-        // 4. The "Versus" Prompt
         const comparePrompt = `
             **Role:** You are "Nutri-X Duel," a specialized AI food comparison engine. Your mission is to settle the "Battle of the Brands" by analyzing two sets of food data (ingredients and nutriments) and determining which is superior based strictly on the user's health profile.
 
@@ -280,12 +272,9 @@ router.post('/api/compare', upload.array('image', 2), async (req, res) => {
             ]
             }
         `;
-
-        // 5. Generate Comparison
         const result = await model.generateContent([comparePrompt, ...imageParts]);
         const responseText = result.response.text();
 
-        // 6. Cleanup Files
         files.forEach(file => fs.unlinkSync(file.path));
 
         console.log(responseText);
@@ -296,7 +285,6 @@ router.post('/api/compare', upload.array('image', 2), async (req, res) => {
 
     } catch (error) {
         console.error("Comparison Route Error:", error);
-        // Cleanup on error
         if (files) files.forEach(file => {
             if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
         });

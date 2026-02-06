@@ -9,7 +9,6 @@ const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    // FIX 1: Use useLocation to get the current route path automatically
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -35,16 +34,13 @@ const Navbar = () => {
         >
             <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
 
-                {/* 1. Logo: Changed to Link to prevent refresh */}
                 <Link to="/" className="text-2xl flex items-center font-bold text-emerald-600 tracking-tight font-sans">
                     <img src={logoImage} alt="Logo" className="w-15 h-15" />
                     <img src={logoImage2} alt="Logo" className="w-30 h-10 mb-2" />
                 </Link>
 
-                {/* 2. Desktop Navigation */}
                 <div className="hidden md:flex items-center gap-8">
                     {navLinks.map((link) => {
-                        // FIX 2: Check if the current URL matches the link's href
                         const isActive = location.pathname === link.href;
 
                         return (
@@ -54,7 +50,6 @@ const Navbar = () => {
                                 className="relative px-1 py-2 text-sm font-medium text-slate-600 hover:text-emerald-600 transition-colors"
                             >
                                 {link.name}
-                                {/* FIX 3: Conditionally render based on URL match, not state */}
                                 {isActive && (
                                     <motion.div
                                         layoutId="active-nav-underline"
@@ -76,7 +71,6 @@ const Navbar = () => {
                     </button>
                 </div>
 
-                {/* Mobile Menu Button */}
                 <button
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     className="md:hidden p-2 text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 rounded-full transition-colors"
@@ -85,7 +79,6 @@ const Navbar = () => {
                 </button>
             </div>
 
-            {/* Mobile Navigation Dropdown */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div

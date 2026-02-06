@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-// --- COMPONENT: CIRCULAR CONFIDENCE METER ---
 const ConfidenceMeter = ({ score = 0 }) => {
     const radius = 42;
     const strokeWidth = 8;
@@ -115,28 +114,23 @@ const ResultsView = ({ results, onReset }) => {
         const greenIngredients = (results.green_flags || []).map(str => parsePoint(str, 'safe')).filter(Boolean);
         const redIngredients = (results.red_flags || []).map(str => parsePoint(str, 'avoid')).filter(Boolean);
 
-        // --- FIXED LOGIC START ---
         let calculatedStatus = 'caution';
         let verdictText = '';
         let isPositive = false;
         const rawVerdict = results.final_verdict;
 
         if (!rawVerdict) {
-            // Handle empty/null case
             calculatedStatus = 'caution';
             verdictText = "Analysis inconclusive";
         }
-        // CASE 1: Object format { is_good: boolean, recommendation: string }
         else if (typeof rawVerdict === 'object' && !Array.isArray(rawVerdict)) {
             isPositive = Boolean(rawVerdict.is_good);
             verdictText = rawVerdict.recommendation || "";
         }
-        // CASE 2: Boolean
         else if (typeof rawVerdict === 'boolean') {
             isPositive = rawVerdict;
             verdictText = rawVerdict ? "Safe to consume" : "Avoid";
         }
-        // CASE 3: Array [boolean/string, string]
         else if (Array.isArray(rawVerdict) && rawVerdict.length > 0) {
             const firstItem = rawVerdict[0];
             verdictText = rawVerdict[1] || String(firstItem);
@@ -146,10 +140,9 @@ const ResultsView = ({ results, onReset }) => {
             } else if (typeof firstItem === 'object' && firstItem !== null && 'is_good' in firstItem) {
                 isPositive = Boolean(firstItem.is_good);
             } else {
-                isPositive = Boolean(firstItem); // Fallback
+                isPositive = Boolean(firstItem);
             }
         }
-        // CASE 4: String
         else if (typeof rawVerdict === 'string') {
             verdictText = rawVerdict;
             const lowerRaw = rawVerdict.toLowerCase();
@@ -160,12 +153,9 @@ const ResultsView = ({ results, onReset }) => {
             }
         }
 
-        // --- FINAL STATUS DETERMINATION ---
-        // If explicitly flagged as Good, force SAFE status.
         if (isPositive) {
             calculatedStatus = 'safe';
         } else {
-            // Otherwise, check keywords to distinguish between CAUTION and AVOID
             const lowerText = verdictText.toLowerCase();
             if (lowerText.includes('caution') || lowerText.includes('moderate') || lowerText.includes('warning')) {
                 calculatedStatus = 'caution';
@@ -173,13 +163,10 @@ const ResultsView = ({ results, onReset }) => {
                 calculatedStatus = 'avoid';
             }
         }
-        // --- FIXED LOGIC END ---
 
         let alternativeText = null;
         let alternativeProduct = null;
         const rawAlt = results.better_alternative;
-
-        // Handle array or string for better_alternative
         if (Array.isArray(rawAlt)) {
             if (rawAlt.length > 0) alternativeText = rawAlt[0];
             if (rawAlt.length > 1) alternativeProduct = rawAlt[1];
@@ -264,7 +251,6 @@ const ResultsView = ({ results, onReset }) => {
             animate="show"
             className="w-full max-w-4xl mx-auto space-y-8 pb-20 font-sans"
         >
-            {/* 1. HERO VERDICT SECTION */}
             <motion.div variants={itemVars} className="relative overflow-hidden bg-white rounded-3xl shadow-xl border border-slate-100">
                 <div className={cn("h-2 w-full absolute top-0 left-0", currentStyle.accent)}></div>
 
@@ -272,7 +258,6 @@ const ResultsView = ({ results, onReset }) => {
                     <div className="flex flex-col md:flex-row gap-8 items-center justify-between">
 
                         <div className="flex-1 space-y-4">
-                            {/* Header: Icon + Label */}
                             <div className="flex items-center gap-4">
                                 <div className={cn("p-3 rounded-xl shrink-0", currentStyle.iconBg, currentStyle.iconColor)}>
                                     <currentStyle.icon className="w-8 h-8 md:w-9 md:h-9" strokeWidth={2.5} />
@@ -287,7 +272,6 @@ const ResultsView = ({ results, onReset }) => {
                             </p>
                         </div>
 
-                        {/* Confidence Meter */}
                         <div className="flex-shrink-0 pt-6 md:pt-0 pl-0 md:pl-8 border-t md:border-t-0 md:border-l border-slate-100 md:border-transparent w-full md:w-auto flex justify-center">
                             <ConfidenceMeter score={data.confidence} />
                         </div>
@@ -295,7 +279,6 @@ const ResultsView = ({ results, onReset }) => {
                 </div>
             </motion.div>
 
-            {/* 2. REALITY CHECK */}
             {data.shockComparison && (data.shockComparison.length > 0) && (
                 <motion.div variants={itemVars} className="bg-gradient-to-r from-rose-50 to-orange-50 rounded-2xl p-6 md:p-8 border border-rose-100 flex items-start gap-4 shadow-sm relative overflow-hidden">
                     <div className="bg-white p-3 rounded-full shadow-sm text-rose-500 hidden sm:block z-10">
@@ -312,11 +295,9 @@ const ResultsView = ({ results, onReset }) => {
                 </motion.div>
             )}
 
-            {/* 3. ACTION GRID: Swaps & Tips */}
             {(data.betterAlternative || data.proTip) && (
                 <motion.div variants={itemVars} className="grid md:grid-cols-2 gap-4">
 
-                    {/* Swap Card */}
                     {data.betterAlternative && (
                         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
                             <div className="flex justify-between items-start mb-4">
@@ -341,7 +322,6 @@ const ResultsView = ({ results, onReset }) => {
                         </div>
                     )}
 
-                    {/* Pro Tip Card */}
                     {data.proTip && (
                         <div className={cn(
                             "bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow",
@@ -361,7 +341,6 @@ const ResultsView = ({ results, onReset }) => {
                 </motion.div>
             )}
 
-            {/* 4. DETAILED BREAKDOWN SECTION */}
             {data.ingredients.length > 0 && (
                 <motion.div variants={itemVars}>
                     <div className="flex items-center justify-between mb-6">
@@ -403,7 +382,6 @@ const ResultsView = ({ results, onReset }) => {
                 </motion.div>
             )}
 
-            {/* 5. BOTTOM ACTION */}
             <motion.div variants={itemVars} className="flex justify-center pt-8">
                 <button
                     onClick={onReset}

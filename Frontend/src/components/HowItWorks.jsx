@@ -44,11 +44,9 @@ const HowItWorks = () => {
                             whileInView={{
                                 opacity: 1,
                                 y: 0,
-                                // Move the entrance delay here so it doesn't slow down the hover
                                 transition: { duration: 0.5, delay: index * 0.2 }
                             }}
                             viewport={{ once: true }}
-                            // Add this line for the smooth scale effect
                             whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
                             className="flex flex-col items-center text-center p-8 rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-emerald-300 transition-shadow duration-300"
                         >

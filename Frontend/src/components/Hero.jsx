@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, ArrowRightLeft } from 'lucide-react'; // Added ArrowRightLeft
+import { ArrowRight, Sparkles, ArrowRightLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Hero = () => {
@@ -9,7 +9,6 @@ const Hero = () => {
             <div className="absolute top-0 left-1/4 w-200 h-150 bg-emerald-100/50 rounded-full blur-3xl -z-100" />
             <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-teal-50/50 rounded-full blur-3xl -z-100" />
 
-            {/* Heading */}
             <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -22,7 +21,6 @@ const Hero = () => {
                 </span>
             </motion.h1>
 
-            {/* Subheading */}
             <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -33,14 +31,12 @@ const Hero = () => {
                 to get an instant, plain-english breakdown of risks and benefits.
             </motion.p>
 
-            {/* CTA Buttons Container */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
                 className="flex flex-col sm:flex-row items-center gap-4"
             >
-                {/* EXISTING: Start Analysis Button (Primary Action) */}
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Link
                         to="/chat"
@@ -52,7 +48,6 @@ const Hero = () => {
                     </Link>
                 </motion.div>
 
-                {/* NEW: Compare Button (Secondary Action) */}
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Link
                         to="/compare"

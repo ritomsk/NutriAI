@@ -8,7 +8,6 @@ import ResultsView from './ResultsView';
 import BarcodeScanner from './BarcodeScanner';
 const API_URL = import.meta.env.VITE_API_URL;
 
-// Helper: Convert Webcam Base64 to a real File object
 const dataURLtoFile = (dataurl, filename) => {
     const arr = dataurl.split(',');
     const mime = arr[0].match(/:(.*?);/)[1];
@@ -22,20 +21,16 @@ const dataURLtoFile = (dataurl, filename) => {
 };
 
 const ChatInterface = () => {
-    // State Management
-    const [mode, setMode] = useState('input'); // input | scanning | camera | loading | results
+    const [mode, setMode] = useState('input');
     const [inputValue, setInputValue] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [apiResponse, setApiResponse] = useState(null);
     const [error, setError] = useState(null);
-
-    // Camera Refs & State
     const webcamRef = useRef(null);
     const fileInputRef = useRef(null);
     const [facingMode, setFacingMode] = useState("environment");
 
-    // --- 1. BARCODE LOGIC ---
     const handleBarcodeScanned = async (barcode) => {
         setMode('loading');
         setError(null);
@@ -80,7 +75,6 @@ const ChatInterface = () => {
         }
     };
 
-    // --- 2. CAMERA LOGIC ---
     const capturePhoto = useCallback(() => {
         const imageSrc = webcamRef.current.getScreenshot();
         if (imageSrc) {
@@ -95,7 +89,6 @@ const ChatInterface = () => {
         setFacingMode(prev => prev === "user" ? "environment" : "user");
     };
 
-    // --- 3. EXISTING HANDLERS ---
     const handleFileSelect = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -152,14 +145,12 @@ const ChatInterface = () => {
     return (
         <div className="relative w-full min-h-[85vh] flex flex-col items-center justify-center p-4 overflow-hidden">
 
-            {/* Background Decoration */}
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-100/50 rounded-full blur-3xl -z-10" />
             <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-teal-50/50 rounded-full blur-3xl -z-10" />
 
             <div className="w-full md:max-w-3xl mx-auto z-10">
                 <AnimatePresence mode="wait">
 
-                    {/* --- MODE: INPUT --- */}
                     {mode === 'input' && (
                         <motion.div
                             key="input"
@@ -169,7 +160,6 @@ const ChatInterface = () => {
                             transition={{ duration: 0.4, ease: "easeOut" }}
                             className="w-full space-y-8"
                         >
-                            {/* Hero Heading */}
                             <div className="text-center space-y-3 mb-10">
                                 <h1 className="text-4xl md:text-6xl font-bold text-gray-900 tracking-tight">
                                     What are we <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">eating today?</span>
@@ -179,7 +169,6 @@ const ChatInterface = () => {
                                 </p>
                             </div>
 
-                            {/* Error Toast */}
                             {error && (
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.9 }}
@@ -190,10 +179,8 @@ const ChatInterface = () => {
                                 </motion.div>
                             )}
 
-                            {/* Main Input Card */}
                             <div className="bg-white rounded-[2rem] shadow-2xl shadow-emerald-500/10 border border-gray-100 overflow-hidden relative transition-all focus-within:outline-none focus-within:ring-0 duration-300 hover:shadow-emerald-500/20 group">
                                 <div className="p-1">
-                                    {/* File Input (Hidden) */}
                                     <input
                                         type="file"
                                         ref={fileInputRef}
@@ -202,7 +189,6 @@ const ChatInterface = () => {
                                         className="hidden"
                                     />
 
-                                    {/* Image Preview - FIXED: Restored 'X' button functionality */}
                                     <AnimatePresence>
                                         {previewUrl && (
                                             <motion.div
@@ -218,7 +204,6 @@ const ChatInterface = () => {
                                                         className="w-full h-full object-cover"
                                                     />
 
-                                                    {/* 👇 RESTORED: Always visible remove button on top-right */}
                                                     <button
                                                         onClick={clearFile}
                                                         className="absolute top-3 right-3 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors z-10 shadow-lg"
@@ -231,7 +216,6 @@ const ChatInterface = () => {
                                         )}
                                     </AnimatePresence>
 
-                                    {/* Text Area */}
                                     <textarea
                                         value={inputValue}
                                         onChange={(e) => setInputValue(e.target.value)}
@@ -240,10 +224,8 @@ const ChatInterface = () => {
                                     />
                                 </div>
 
-                                {/* Action Toolbar */}
                                 <div className="bg-gray-50/50 border-t border-gray-100 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
 
-                                    {/* Tools */}
                                     <div className="flex items-center gap-2 w-full md:w-auto justify-center md:justify-start">
                                         <button
                                             onClick={() => fileInputRef.current?.click()}
@@ -280,7 +262,6 @@ const ChatInterface = () => {
                                         </span>
                                     </div>
 
-                                    {/* Main Action Button */}
                                     <button
                                         onClick={handleAnalyze}
                                         disabled={!inputValue.trim() && !selectedImage}
@@ -301,7 +282,6 @@ const ChatInterface = () => {
                         </motion.div>
                     )}
 
-                    {/* --- MODE: CAMERA --- */}
                     {mode === 'camera' && (
                         <motion.div
                             key="camera"
@@ -318,7 +298,6 @@ const ChatInterface = () => {
                                 className="w-full h-full object-cover"
                             />
 
-                            {/* Camera UI Overlay */}
                             <div className="absolute inset-0 flex flex-col justify-between p-6">
                                 <div className="flex justify-between items-start">
                                     <button
@@ -347,14 +326,11 @@ const ChatInterface = () => {
                                         <div className="w-16 h-16 bg-white rounded-full transition-transform group-hover:scale-90" />
                                     </button>
 
-                                    <div className="w-12" /> {/* Spacer for balance */}
+                                    <div className="w-12" />
                                 </div>
                             </div>
                         </motion.div>
                     )}
-
-                    {/* --- MODE: SCANNING --- */}
-                    {/* 👇 FIXED: Removed bg-black and dark padding */}
                     {mode === 'scanning' && (
                         <motion.div
                             key="scanning"
@@ -380,7 +356,6 @@ const ChatInterface = () => {
                         </motion.div>
                     )}
 
-                    {/* --- MODE: LOADING --- */}
                     {mode === 'loading' && (
                         <motion.div
                             key="loading"
@@ -393,7 +368,6 @@ const ChatInterface = () => {
                         </motion.div>
                     )}
 
-                    {/* --- MODE: RESULTS --- */}
                     {mode === 'results' && (
                         <motion.div
                             key="results"

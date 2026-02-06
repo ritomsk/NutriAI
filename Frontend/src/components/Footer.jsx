@@ -7,20 +7,16 @@ const Footer = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    // Custom handler for "How It Works" to ensure smooth scrolling
     const handleScrollToSection = (e, sectionId) => {
         e.preventDefault();
 
-        // If we're not on the home page, navigate there first
         if (location.pathname !== '/') {
             navigate(`/#${sectionId}`);
-            // Small timeout to allow navigation to complete before scrolling
             setTimeout(() => {
                 const element = document.getElementById(sectionId);
                 if (element) element.scrollIntoView({ behavior: 'smooth' });
             }, 100);
         } else {
-            // We are already on home, just scroll
             const element = document.getElementById(sectionId);
             if (element) element.scrollIntoView({ behavior: 'smooth' });
         }
@@ -29,9 +25,7 @@ const Footer = () => {
     return (
         <footer className="bg-white border-t border-gray-200 pt-16 pb-8 mt-auto">
             <div className="max-w-7xl mx-auto px-6">
-                {/* Main Top Section: 2-Column Layout */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
-                    {/* Left Side: Brand */}
                     <div>
                         <div className="flex items-center gap-2 mb-4">
                             <img src={logoImage2} alt="NutriAI Logo" className="h-10 w-auto" />
@@ -41,9 +35,7 @@ const Footer = () => {
                         </p>
                     </div>
 
-                    {/* Right Side: Links */}
                     <div className="grid grid-cols-2 gap-8">
-                        {/* PRODUCT Column */}
                         <div>
                             <h4 className="font-bold text-slate-800 mb-4 text-sm tracking-wider">PRODUCT</h4>
                             <ul className="space-y-3 text-sm text-gray-500">
@@ -53,7 +45,6 @@ const Footer = () => {
                                     </Link>
                                 </li>
                                 <li>
-                                    {/* Assuming '/chat' is your main scan/analysis page based on previous context */}
                                     <Link to="/chat" className="hover:text-emerald-600 transition-colors">
                                         Analyze Product
                                     </Link>
@@ -75,7 +66,6 @@ const Footer = () => {
                             </ul>
                         </div>
 
-                        {/* RESOURCES Column */}
                         <div>
                             <h4 className="font-bold text-slate-800 mb-4 text-sm tracking-wider">RESOURCES</h4>
                             <ul className="space-y-3 text-sm text-gray-500">
@@ -100,7 +90,6 @@ const Footer = () => {
                     </div>
                 </div>
 
-                {/* Disclaimer Box */}
                 <div className="mb-12">
                     <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-4 text-sm text-gray-600 flex gap-3 items-start">
                         <Info size={20} className="text-emerald-600 shrink-0 mt-0.5" />
@@ -110,7 +99,6 @@ const Footer = () => {
                     </div>
                 </div>
 
-                {/* Bottom Section */}
                 <div className="border-t border-gray-200 pt-8 flex flex-col items-center text-center text-sm text-gray-500">
                     <p className="mb-2">© 2026 NutriAI. All rights reserved.</p>
                     <Link to="/" className="hover:text-emerald-600 transition-colors">
