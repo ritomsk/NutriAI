@@ -107,7 +107,7 @@ const CompareInterface = () => {
                             {/* Goals Input */}
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-text-muted uppercase tracking-wider ml-1">
-                                    Your Goal (Optional)
+                                    Your Goals
                                 </label>
                                 <textarea
                                     value={userGoals}

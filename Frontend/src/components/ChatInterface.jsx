@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
-import Webcam from 'react-webcam'; // <--- NEW IMPORT
+import Webcam from 'react-webcam';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, Camera, Sparkles, X, FileImage, ScanLine, RefreshCcw } from 'lucide-react';
+import { Upload, Camera, Sparkles, X, ScanLine, RefreshCcw } from 'lucide-react';
 import { cn } from '../lib/utils';
 import AnalysisLoader from './AnalysisLoader';
 import ResultsView from './ResultsView';
@@ -34,7 +34,7 @@ const ChatInterface = () => {
     const fileInputRef = useRef(null);
     const [facingMode, setFacingMode] = useState("environment"); // "user" (front) or "environment" (back)
 
-    // --- 1. BARCODE LOGIC (Kept same as before) ---
+    // --- 1. BARCODE LOGIC ---
     const handleBarcodeScanned = async (barcode) => {
         setMode('loading');
         setError(null);
@@ -79,18 +79,13 @@ const ChatInterface = () => {
         }
     };
 
-    // --- 2. CAMERA LOGIC (NEW) ---
+    // --- 2. CAMERA LOGIC ---
     const capturePhoto = useCallback(() => {
         const imageSrc = webcamRef.current.getScreenshot();
         if (imageSrc) {
-            // Convert Base64 -> File Object
             const file = dataURLtoFile(imageSrc, "camera_capture.jpg");
-
-            // Update State (Just like a normal upload)
             setSelectedImage(file);
             setPreviewUrl(imageSrc);
-
-            // Close camera and go back to input
             setMode('input');
         }
     }, [webcamRef]);
@@ -125,7 +120,6 @@ const ChatInterface = () => {
             const formData = new FormData();
             formData.append('userGoals', inputValue);
             if (selectedImage) {
-                // 'productImage' matches the Multer config in server.js
                 formData.append('image', selectedImage);
             }
 
@@ -183,7 +177,8 @@ const ChatInterface = () => {
                             </div>
                         )}
 
-                        <div className="glass p-4 rounded-3xl shadow-glass space-y-4 relative transition-all focus-within:ring-2 focus-within:ring-mesh-lavender/50">
+                        {/* FIXED: Removed focus-within:ring-2 to eliminate the border on click */}
+                        <div className="glass p-4 rounded-3xl shadow-glass space-y-4 relative transition-all focus:outline-none">
                             <input
                                 type="file"
                                 ref={fileInputRef}
@@ -212,7 +207,7 @@ const ChatInterface = () => {
                                 value={inputValue}
                                 onChange={(e) => setInputValue(e.target.value)}
                                 placeholder={selectedImage ? "Add context about this photo..." : "Paste ingredients or type your health goals..."}
-                                className="w-full min-h-[120px] bg-transparent border-none resize-none focus:ring-0 text-lg text-text-primary placeholder:text-text-muted p-2 font-serif leading-relaxed"
+                                className="w-full min-h-[120px] bg-transparent border-none resize-none focus:ring-0 focus:outline-none text-lg text-text-primary placeholder:text-text-muted p-2 font-serif leading-relaxed"
                             />
 
                             <div className="flex items-center justify-between px-2 pt-2 border-t border-border-glass">
@@ -230,7 +225,7 @@ const ChatInterface = () => {
                                         {selectedImage && <span className="text-xs font-medium">Attached</span>}
                                     </button>
 
-                                    {/* 2. CAMERA BUTTON (NEW) */}
+                                    {/* 2. CAMERA BUTTON */}
                                     <button
                                         onClick={() => setMode('camera')}
                                         className="p-2 text-text-body hover:bg-black/5 rounded-full transition-colors tooltip flex items-center gap-2"
@@ -272,7 +267,7 @@ const ChatInterface = () => {
                     </motion.div>
                 )}
 
-                {/* --- MODE: CAMERA (NEW) --- */}
+                {/* --- MODE: CAMERA --- */}
                 {mode === 'camera' && (
                     <motion.div
                         key="camera"
@@ -288,8 +283,6 @@ const ChatInterface = () => {
                             videoConstraints={{ facingMode: facingMode }}
                             className="w-full h-full object-cover"
                         />
-
-                        {/* Camera Overlay Controls */}
                         <div className="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-between">
                             <button
                                 onClick={() => setMode('input')}
@@ -297,14 +290,12 @@ const ChatInterface = () => {
                             >
                                 <X className="w-6 h-6" />
                             </button>
-
                             <button
                                 onClick={capturePhoto}
                                 className="w-16 h-16 rounded-full border-4 border-white flex items-center justify-center bg-transparent hover:bg-white/20 transition-all"
                             >
                                 <div className="w-12 h-12 bg-white rounded-full" />
                             </button>
-
                             <button
                                 onClick={toggleCamera}
                                 className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/30 transition-all"
@@ -315,7 +306,7 @@ const ChatInterface = () => {
                     </motion.div>
                 )}
 
-                {/* --- MODE: SCANNING (Barcode) --- */}
+                {/* --- MODE: SCANNING --- */}
                 {mode === 'scanning' && (
                     <motion.div
                         key="scanning"
@@ -324,9 +315,7 @@ const ChatInterface = () => {
                         exit={{ opacity: 0 }}
                         className="w-full flex flex-col items-center"
                     >
-                        <BarcodeScanner
-                            onScanSuccess={handleBarcodeScanned}
-                        />
+                        <BarcodeScanner onScanSuccess={handleBarcodeScanned} />
                         <button
                             onClick={() => setMode('input')}
                             className="mt-6 px-6 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full font-medium transition-colors"
