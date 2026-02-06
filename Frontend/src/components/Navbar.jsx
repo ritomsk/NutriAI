@@ -1,81 +1,118 @@
-import React, { useState } from 'react';
-import { Menu, X, Zap } from 'lucide-react';
-import { cn } from '../lib/utils';
+import React, { useState, useEffect } from 'react';
+import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 
 const Navbar = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    // FIX 1: Use useLocation to get the current route path automatically
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 10);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     const navLinks = [
-        { name: 'About', href: '#' },
-        { name: 'Help', href: '#' },
+        { name: 'Home', href: '/' },
+        { name: 'About', href: '/about' },
     ];
 
     return (
-        // FIX 1: Changed 'fixed' to 'sticky' to reserve layout space
-        // FIX 2: Increased z-index to 100 to ensure it stays on top of all other layers
-        <nav className="sticky top-0 w-full z-[100] px-4 py-4 sm:px-6 lg:px-8 pointer-events-none">
-            <div className="max-w-7xl mx-auto pointer-events-auto">
-                {/* Added explicit backdrop-blur to ensure content scrolling under looks good */}
-                <div className="glass rounded-2xl px-6 py-3 flex justify-between items-center bg-white/70 backdrop-blur-md border border-white/20 shadow-sm">
-                    {/* Logo */}
-                    <div className="flex items-center gap-2">
-                        <div className="p-2 bg-gradient-to-br from-emerald-100 to-indigo-100 rounded-lg">
-                            <Zap className="w-5 h-5 text-emerald-700" />
-                        </div>
-                        <span className="font-bold text-lg tracking-tight text-slate-800">
-                            IngredientAI
-                        </span>
-                    </div>
+        <nav
+            className={`fixed top-0 left-0 right-0 z-[100] border-b border-gray-100 shadow-sm transition-all duration-300 ${isScrolled
+                ? 'bg-white/90 backdrop-blur-md shadow-sm'
+                : 'bg-transparent'
+                }`}
+        >
+            <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
 
-                    {/* Desktop Nav */}
-                    <div className="hidden md:flex items-center gap-8">
-                        {navLinks.map((link) => (
-                            <a
+                {/* 1. Logo: Changed to Link to prevent refresh */}
+                <Link to="/" className="text-2xl font-bold text-emerald-600 tracking-tight font-sans">
+                    Ingredient Co-Pilot
+                </Link>
+
+                {/* 2. Desktop Navigation */}
+                <div className="hidden md:flex items-center gap-8">
+                    {navLinks.map((link) => {
+                        // FIX 2: Check if the current URL matches the link's href
+                        const isActive = location.pathname === link.href;
+
+                        return (
+                            <Link
                                 key={link.name}
-                                href={link.href}
-                                className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                                to={link.href}
+                                className="relative px-1 py-2 text-sm font-medium text-slate-600 hover:text-emerald-600 transition-colors"
                             >
                                 {link.name}
-                            </a>
-                        ))}
-                        <button className="px-5 py-2.5 bg-slate-900 text-white rounded-full text-sm font-medium hover:bg-slate-800 transition-transform hover:scale-105 active:scale-95 shadow-lg">
-                            Get Started
-                        </button>
-                    </div>
+                                {/* FIX 3: Conditionally render based on URL match, not state */}
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="active-nav-underline"
+                                        className="absolute left-0 right-0 -bottom-0.5 h-[2px] bg-emerald-500"
+                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                    />
+                                )}
+                            </Link>
+                        );
+                    })}
 
-                    {/* Mobile Menu Button */}
                     <button
-                        onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden p-2 text-slate-600 hover:bg-black/5 rounded-lg transition-colors"
-                    >
-                        {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                        onClick={() => {
+                            navigate('/chat');
+                            setIsMobileMenuOpen(false);
+                        }}
+                        className="bg-emerald-500 text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-emerald-600 transition-all hover:scale-105 shadow-lg shadow-emerald-200">
+                        Analyze a Product
                     </button>
                 </div>
+
+                {/* Mobile Menu Button */}
+                <button
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className="md:hidden p-2 text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 rounded-full transition-colors"
+                >
+                    {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
             </div>
 
-            {/* Mobile Nav Dropdown */}
+            {/* Mobile Navigation Dropdown */}
             <AnimatePresence>
-                {isOpen && (
+                {isMobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        // Ensure mobile menu is clickable by re-enabling pointer events
-                        className="absolute top-20 left-4 right-4 z-40 pointer-events-auto"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="md:hidden bg-white border-b border-gray-100 overflow-hidden absolute w-full shadow-xl"
                     >
-                        <div className="glass rounded-2xl p-4 flex flex-col gap-4 shadow-glass bg-white/90 backdrop-blur-xl border border-white/20">
-                            {navLinks.map((link) => (
-                                <a
-                                    key={link.name}
-                                    href={link.href}
-                                    className="px-4 py-3 text-slate-700 hover:bg-black/5 rounded-xl transition-colors font-medium"
-                                >
-                                    {link.name}
-                                </a>
-                            ))}
-                            <button className="w-full py-3 bg-slate-900 text-white rounded-xl font-medium shadow-lg">
-                                Get Started
+                        <div className="flex flex-col p-6 gap-4">
+                            {navLinks.map((link) => {
+                                const isActive = location.pathname === link.href;
+                                return (
+                                    <Link
+                                        key={link.name}
+                                        to={link.href}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={`text-lg font-medium transition-colors ${isActive ? 'text-emerald-600' : 'text-slate-600'
+                                            }`}
+                                    >
+                                        {link.name}
+                                    </Link>
+                                );
+                            })}
+                            <button
+                                onClick={() => {
+                                    navigate('/chat');
+                                    setIsMobileMenuOpen(false);
+                                }}
+                                className="w-full py-3 bg-emerald-500 text-white rounded-xl font-medium shadow-md hover:bg-emerald-600 transition-colors mt-2">
+                                Analyze a Product
                             </button>
                         </div>
                     </motion.div>

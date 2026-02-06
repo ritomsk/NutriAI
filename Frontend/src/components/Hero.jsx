@@ -22,7 +22,7 @@ const Hero = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-text-primary leading-[1.1]"
+                className="text-5xl md:stext-6xl lg:text-7xl font-bold tracking-tight text-gray-900 leading-tight"
             >
                 Decode Your Food <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">
@@ -35,7 +35,7 @@ const Hero = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="text-lg md:text-xl text-text-body max-w-2xl leading-relaxed"
+                className="text-lg md:text-xl text-gray-600 max-w-2xl leading-relaxed"
             >
                 Make informed decisions about what you eat. Scan labels or paste ingredients
                 to get an instant, plain-english breakdown of risks and benefits.
@@ -52,7 +52,7 @@ const Hero = () => {
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Link
                         to="/chat"
-                        className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white transition-all duration-200 bg-text-primary rounded-full hover:bg-gray-800 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+                        className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white transition-all duration-200 bg-gray-900 rounded-full hover:bg-gray-800 shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
                     >
                         <span>Start Analysis</span>
                         <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
@@ -64,7 +64,7 @@ const Hero = () => {
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Link
                         to="/compare"
-                        className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-text-primary transition-all duration-200 bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:border-emerald-200 shadow-sm hover:shadow-md"
+                        className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-gray-900 transition-all duration-200 bg-white border border-gray-200 rounded-full hover:bg-gray-50 shadow-sm hover:shadow-md"
                     >
                         <ArrowRightLeft className="w-5 h-5 mr-2 text-emerald-600 group-hover:text-emerald-700" />
                         <span>Compare Products</span>
