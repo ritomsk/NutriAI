@@ -6,6 +6,7 @@ import { cn } from '../lib/utils';
 import AnalysisLoader from './AnalysisLoader';
 import ResultsView from './ResultsView';
 import BarcodeScanner from './BarcodeScanner';
+const API_URL = import.meta.env.VITE_API_URL;
 
 // Helper: Convert Webcam Base64 to a real File object
 const dataURLtoFile = (dataurl, filename) => {
@@ -53,7 +54,7 @@ const ChatInterface = () => {
                     userGoals: inputValue || "General health check"
                 };
 
-                const backendResponse = await fetch('http://localhost:3001/api/barcode', {
+                const backendResponse = await fetch(`${API_URL}/api/barcode`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -123,7 +124,7 @@ const ChatInterface = () => {
                 formData.append('image', selectedImage);
             }
 
-            const response = await fetch('http://localhost:3001/api/analyze', {
+            const response = await fetch(`${API_URL}/api/analyze`, {
                 method: 'POST',
                 body: formData,
             });

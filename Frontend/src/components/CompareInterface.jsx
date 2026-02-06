@@ -5,6 +5,7 @@ import { cn } from '../lib/utils';
 import AnalysisLoader from './AnalysisLoader';
 // IMPORT THE NEW COMPONENT
 import ComparisonResultsView from './ComparisonResultsView';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const CompareInterface = () => {
     // State
@@ -45,7 +46,7 @@ const CompareInterface = () => {
             formData.append('image', images.A);
             formData.append('image', images.B);
 
-            const response = await fetch('http://localhost:3001/api/compare', {
+            const response = await fetch(`${API_URL}/api/compare`, {
                 method: 'POST',
                 body: formData,
             });
