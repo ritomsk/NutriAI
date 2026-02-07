@@ -48,6 +48,7 @@ router.post('/api/analyze', upload.single('image'), async (req, res) => {
             - **🔴 NO:**  Assign this for junk food, candy, or items that actively work against the user's goals.
             4. **Shock Comparison:** ONLY for 🔴 NO or genuinely unhealthy items. Use a short, crisp (max 5 words) Indian junk food reference (e.g., "Saltier than a Samosa"). Otherwise, set to [].
             5. **Strict Restriction:** Never mention "missing ingredients" or "incomplete data." 
+            6. **Better Alternatives:** Always suggest one general dietary category (e.g., "Whole Grain Snacks") and one exact brand-name product as a healthier alternative.
 
             **Phase 2: Output Constraints**
             - **Tone:** Simplistic, non-technical, and encouraging. Avoid being overly alarmist about minor preservatives or additives.
@@ -138,6 +139,7 @@ router.post('/api/barcode', async (req, res) => {
             - **🟡 CAUTION:**  Assign this ONLY if there is a direct conflict with the user's specific disease (e.g., Sugar for a Diabetic) or if the product poses a significant macro imbalance (e.g., very high fat with zero protein). Do not use this for general "processed food" nitpicking.
             - **🔴 NO:** Assign this for junk food, candy, or items that actively work against the user's goals.
             4. **Anonymity & Data:** Do not warn about "missing data" or "missing ingredients." If data is sparse, use your general knowledge to provide the most helpful, supportive estimate.
+            5. **Better Alternatives:** Always suggest one general dietary category (e.g., "Whole Grain Snacks") and one exact brand-name product as a healthier alternative.
 
             **Phase 2: Output Constraints**
             - **Tone:** Simplistic, supportive peer-like tone. Avoid being alarmist.
