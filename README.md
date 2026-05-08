@@ -359,6 +359,10 @@ ISC License
 ## Author
 
 Developed with ❤️ by the NutriAI team
+Ritom Saikia(Team Leader)
+Jyotishman Borah
+Debankur Saikia
+Ashlesha Sarmah
 
 ---
 
